@@ -1,0 +1,31 @@
+{
+  "name": "appliqation-defect-fix",
+  "version": "0.1.0",
+  "description": "Standalone agent that fixes an Appliqation defect: loads full defect context, locates and applies a code fix, syncs the Appliqation scenario, and verifies the fix by actually running Playwright.",
+  "type": "module",
+  "bin": {
+    "appliqation-defect-fix": "./dist/cli/index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/cli/index.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint src --ext .ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@appliqation/agent-core": "file:../appliqation-agent-core",
+    "commander": "^13.1.0",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2",
+    "vitest": "^3.2.7"
+  }
+}
