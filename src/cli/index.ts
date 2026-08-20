@@ -6,10 +6,12 @@
 // actual mechanism.
 
 import { Command } from 'commander';
-import { createMcpClient, createAnthropicAdapter, createOpenAiAdapter } from '@appliqation/agent-core';
+import { createMcpClient, createAnthropicAdapter, createOpenAiAdapter, createUsageAccumulator } from '@appliqation/agent-core';
 import type { ProviderAdapter } from '@appliqation/agent-core';
 import { config, resolveProvider, resolveModel } from '../config/env.js';
 import { fix } from '../orchestrator/fix.js';
+import type { FixResult } from '../orchestrator/fix.js';
+import { recordFixRun } from './audit.js';
 import { printJsonSummary, printHumanSummary, exitCodeFor } from './output.js';
 import type { FixSummary } from './output.js';
 
@@ -92,17 +94,32 @@ program
 
       const budget = { ...config.budget, ...(opts.maxTurns ? { maxTurns: Number(opts.maxTurns) } : {}) };
 
-      const result = await fix({
-        client,
-        adapter,
-        defectId: opts.defectId,
-        repoPath: opts.repoPath,
-        budget,
-        commandTimeoutMs: config.commandTimeoutMs,
-        dryRun,
-        testInstruction: opts.testInstruction,
-        onEvent: logEvent(''),
-      });
+      const startedAt = Date.now();
+      const usage = createUsageAccumulator();
+      const baseLog = logEvent('');
+      let result: FixResult | undefined;
+      try {
+        result = await fix({
+          client,
+          adapter,
+          defectId: opts.defectId,
+          repoPath: opts.repoPath,
+          budget,
+          commandTimeoutMs: config.commandTimeoutMs,
+          dryRun,
+          testInstruction: opts.testInstruction,
+          onEvent: (e) => {
+            baseLog(e);
+            if (e.type === 'usage') usage.onUsage(e.detail as { inputTokens: number; outputTokens: number; cacheWriteTokens?: number; cacheReadTokens?: number });
+          },
+        });
+      } finally {
+        // Audit write happens whether the run succeeded or threw — see
+        // @appliqation/agent-core's audit/sink.ts: safeRecord() (used
+        // inside recordFixRun) never lets a failed/unreachable audit sink
+        // affect this process's real outcome.
+        await recordFixRun({ sink: config.auditSink, startedAt, endedAt: Date.now(), model: resolveModel(), usage: usage.totals(), defectId: opts.defectId, dryRun, result });
+      }
 
       if (!json) {
         console.log('\n=== Report ===\n');

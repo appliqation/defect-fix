@@ -88,7 +88,13 @@ full reasoning, not re-explained here.
   `exitCodeFor()` — mirrors scriptgen's `output.ts`, plus a `dryRun` field.
 - `src/config/env.ts` — this agent's own config. No executor/validator split, single
   `resolveModel()`. `COMMAND_TIMEOUT_MS` caps each `run_command` call; `BUDGET_MAX_*`
-  caps the overall tool-calling loop.
+  caps the overall tool-calling loop. `auditSink` resolves `AUDIT_MONGO_*`/
+  `AUDIT_JSONL_PATH` via `@appliqation/agent-core/audit`'s `resolveAuditSink()` —
+  opt-in, no-op when unconfigured.
+- `src/cli/audit.ts` — `recordFixRun()`, extracted out of `cli/index.ts` for the same
+  testability reason as `appliqation-autotest`'s `cli/resolvers.ts`. `outcome` is
+  exactly `FixSummary`'s shape (including `dryRun`); `exitCode` reuses `output.ts`'s
+  own `exitCodeFor()`.
 
 ## Explicitly out of scope for v1
 
