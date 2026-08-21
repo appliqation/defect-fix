@@ -29,15 +29,18 @@ flowchart TD
 ## Quick start
 
 ```bash
-git clone https://github.com/appliqation/appliqation-defect-fix.git
-cd appliqation-defect-fix
-npm install
-cp .env.example .env   # fill in APPQ_API_KEY (needs write access) and one LLM provider key
-npm run build
+npm install -g appliqation-defect-fix
+```
+
+Create a `.env` file (in whatever directory you'll run it from) with:
+
+```
+APPQ_API_KEY=your-appliqation-api-key   # needs write access
+ANTHROPIC_API_KEY=your-anthropic-key    # or OPENAI_API_KEY — pick one
 ```
 
 ```bash
-npx appliqation-defect-fix fix \
+appliqation-defect-fix fix \
   --defect-id <id> \
   --repo-path /path/to/your/checkout \
   --dry-run
@@ -52,6 +55,10 @@ Copy `.env.example` to `.env`. Requires `APPQ_API_KEY` (with write access, unles
 ## Development
 
 ```bash
+git clone https://github.com/appliqation/appliqation-defect-fix.git
+cd appliqation-defect-fix
+npm install
+cp .env.example .env   # fill in APPQ_API_KEY (needs write access) and one LLM provider key
 npm run dev -- fix --defect-id <id> --repo-path <path>
 npm run typecheck
 npm test
