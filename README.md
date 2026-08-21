@@ -29,7 +29,7 @@ flowchart TD
 ## Quick start
 
 ```bash
-npm install -g appliqation-defect-fix
+npm install -g @appliqation/defect-fix
 ```
 
 Create a `.env` file (in whatever directory you'll run it from) with:
