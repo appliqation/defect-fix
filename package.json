@@ -1,6 +1,6 @@
 {
   "name": "appliqation-defect-fix",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Standalone agent that fixes an Appliqation defect: loads full defect context, locates and applies a code fix, syncs the Appliqation scenario, and verifies the fix by actually running Playwright.",
   "type": "module",
   "bin": {
