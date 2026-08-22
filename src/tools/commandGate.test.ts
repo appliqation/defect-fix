@@ -19,6 +19,10 @@ describe('assertCommandAllowed — npm', () => {
     expect(allowed('npm', ['install', '-D', '@playwright/test'])).toBe(true);
   });
 
+  it('allows --ignore-scripts alongside package specs — codingTools.ts appends it automatically', () => {
+    expect(allowed('npm', ['install', '-D', '@playwright/test', '--ignore-scripts'])).toBe(true);
+  });
+
   it('rejects npm install without -D (would install as a real dependency, not dev)', () => {
     expect(allowed('npm', ['install', '@playwright/test'])).toBe(false);
   });
