@@ -52,6 +52,20 @@ appliqation-defect-fix fix \
 
 Copy `.env.example` to `.env`. Requires `APPQ_API_KEY` (with write access, unless every run uses `--dry-run`) and one of `ANTHROPIC_API_KEY`/`OPENAI_API_KEY`.
 
+## Running this safely
+
+Same real shell/filesystem surface as [`appliqation-scriptgen`](https://github.com/appliqation/scriptgen) (`npm`/`npx`/`git`, gated by `commandGate.ts`'s hardcoded allowlist), plus this is the one agent besides `appliqation-autotest`'s validator with real Appliqation write access. `run_command`'s child processes get a scoped, explicit env allowlist — deliberately including `@appliqation/automation-sdk`'s own vars (`APPLIQATION_API_KEY`, `APPQ_AUTH_STATE_DIR`, per-project SUT credentials), since the fix's own Phase 5 verification genuinely needs them to authenticate and report. That's the correct trade-off, but it means a real project credential is reachable from whatever `npx playwright test` executes while investigating and verifying a fix.
+
+**Run this inside a container with an egress allowlist**, not directly on a machine with broad network access. This process (and what it spawns) only ever legitimately needs to reach:
+
+- your LLM provider (`api.anthropic.com` or `api.openai.com`)
+- your configured `APPQ_ORIGIN` (`appq.appliqation.io` by default)
+- `registry.npmjs.org` — only while `npm install -D` actually runs
+- Playwright's browser-download host — only while `npx playwright install` actually runs
+- the project's own site under test — wherever the fixed code/`login.ts` points
+
+Anything else this process (or a spawned `npm`/`npx`/`git` command) tries to reach is unexpected and worth investigating, not routing around.
+
 ## Development
 
 ```bash
