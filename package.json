@@ -3,9 +3,14 @@
   "version": "0.1.1",
   "description": "Standalone agent that fixes an Appliqation defect: loads full defect context, locates and applies a code fix, syncs the Appliqation scenario, and verifies the fix by actually running Playwright.",
   "license": "MIT",
-  "repository": { "type": "git", "url": "git+https://github.com/appliqation/defect-fix.git" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appliqation/defect-fix.git"
+  },
   "homepage": "https://github.com/appliqation/defect-fix#readme",
-  "bugs": { "url": "https://github.com/appliqation/defect-fix/issues" },
+  "bugs": {
+    "url": "https://github.com/appliqation/defect-fix/issues"
+  },
   "type": "module",
   "bin": {
     "appliqation-defect-fix": "./dist/cli/index.js"
@@ -27,7 +32,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@appliqation/agent-core": "^0.1.4",
+    "@appliqation/agent-core": "^0.1.5",
     "commander": "^13.1.0",
     "dotenv": "^16.4.7"
   },
