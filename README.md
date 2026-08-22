@@ -23,8 +23,8 @@ flowchart TD
 ```
 
 - **The one agent besides autotest's validator with real Appliqation write access** — it can sync test cases (`update_test_cases`/`add_test_cases`) and create a verification run, gated behind `--dry-run` so you can watch it work before trusting it with real writes.
-- **`--test-instruction`** lets a caller (typically [`appliqation-autopilot`](https://github.com/appliqation/appliqation-autopilot), which has the broader context to judge this) specify testing scope beyond the default single-test-case re-run — e.g. "this touches shared validation code, re-verify the whole scenario."
-- **No git operation.** Like scriptgen, this agent writes local files only; [`appliqation-pr-raise`](https://github.com/appliqation/appliqation-pr-raise) handles committing and opening the PR.
+- **`--test-instruction`** lets a caller (typically [`appliqation-autopilot`](https://github.com/appliqation/autopilot), which has the broader context to judge this) specify testing scope beyond the default single-test-case re-run — e.g. "this touches shared validation code, re-verify the whole scenario."
+- **No git operation.** Like scriptgen, this agent writes local files only; [`appliqation-pr-raise`](https://github.com/appliqation/pr-raise) handles committing and opening the PR.
 
 ## Quick start
 
@@ -55,8 +55,8 @@ Copy `.env.example` to `.env`. Requires `APPQ_API_KEY` (with write access, unles
 ## Development
 
 ```bash
-git clone https://github.com/appliqation/appliqation-defect-fix.git
-cd appliqation-defect-fix
+git clone https://github.com/appliqation/defect-fix.git
+cd defect-fix
 npm install
 cp .env.example .env   # fill in APPQ_API_KEY (needs write access) and one LLM provider key
 npm run dev -- fix --defect-id <id> --repo-path <path>
