@@ -48,6 +48,27 @@ appliqation-defect-fix fix \
 
 `--dry-run` is the recommended default for your first run against a real project — the code investigation, fix, and Playwright verification all happen for real, but the Appliqation scenario/run writeback is suppressed and logged instead of sent. Add `--test-instruction "<text>"` to specify verification scope, and `--json`/`--ci` for a structured summary + CI-friendly exit code.
 
+## CLI reference
+
+`appliqation-defect-fix fix [options]`
+
+**Required:**
+
+| Option | Description |
+|---|---|
+| `--defect-id <id>` | Defect ID to fix. |
+
+**Optional:**
+
+| Option | Description |
+|---|---|
+| `--repo-path <path>` | Target repo root every file/command tool call is scoped to. Defaults to the current working directory. |
+| `--test-instruction <text>` | Testing scope required beyond `appq:fix`'s own Phase 5 default (re-running just the reproducing test case) — e.g. "also re-run the whole scenario, this component has a history of regressions." Typically supplied by a caller (like `appliqation-autopilot`) that has already gathered evidence about how much verification this fix actually warrants. |
+| `--dry-run` | Apply and verify the fix normally, but suppress `update_test_cases`/`add_test_cases`/`update_run_results` — logs what would have been sent instead. |
+| `--max-turns <n>` | Override `BUDGET_MAX_TURNS` for this run. |
+| `--json` | Print a single structured JSON summary on stdout instead of a human-readable report. |
+| `--ci` | Shorthand for `--json`; exit code already reflects the real, execFile-verified outcome either way. |
+
 ## Configuration
 
 Copy `.env.example` to `.env`. Requires `APPQ_API_KEY` (with write access, unless every run uses `--dry-run`) and one of `ANTHROPIC_API_KEY`/`OPENAI_API_KEY`.
